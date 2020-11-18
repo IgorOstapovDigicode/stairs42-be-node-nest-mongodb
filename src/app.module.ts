@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TeamsModule } from './teams/teams.module';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/nest'), TeamsModule],
+  imports: [MongooseModule.forRoot('mongodb+srv://Igor_Ostapov:be-nest-mongo@cluster0.jzk4j.mongodb.net/stairs42-be-nest-mongodb?retryWrites=true&w=majority'), TeamsModule],
   controllers: [AppController],
   providers: [AppService],
 })
