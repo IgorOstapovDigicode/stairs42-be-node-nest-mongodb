@@ -1,4 +1,4 @@
 export class TeamDTO {
-  readonly id?: string;
+  id?: string;
   title: string;
 }
