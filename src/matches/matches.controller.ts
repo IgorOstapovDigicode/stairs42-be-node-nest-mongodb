@@ -10,7 +10,6 @@ export class MatchesController {
   async createTeam(
     @Body() matchDTO: MatchDTO
   ) {
-    console.log(matchDTO)
     await this.matchesService.createMatch(matchDTO)
   }
 

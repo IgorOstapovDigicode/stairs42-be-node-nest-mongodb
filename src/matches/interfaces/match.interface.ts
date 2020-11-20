@@ -5,6 +5,6 @@ export interface IMatch extends Document {
   HomeTeam: string;
   AwayTeam: string;
   Date: string;
-  FTGH: string;
+  FTHG: string;
   FTAG: string;
 }

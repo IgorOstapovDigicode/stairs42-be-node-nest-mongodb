@@ -12,6 +12,7 @@ import { MatchSchema } from './schemas/match.schema';
     }])
   ],
   providers: [MatchesService],
-  controllers: [MatchesController]
+  controllers: [MatchesController],
+  exports: [MatchesService]
 })
 export class MatchesModule {}

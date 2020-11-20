@@ -11,7 +11,6 @@ export class MatchesService {
   ) {}
 
   async createMatch(match: MatchDTO) {
-    console.log(match)
     const newMatch = await new this.matchModel(match)
     return newMatch.save()
   }

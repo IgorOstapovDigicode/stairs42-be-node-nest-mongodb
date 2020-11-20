@@ -3,6 +3,6 @@ export class MatchDTO {
   HomeTeam: string;
   AwayTeam: string;
   Date: string;
-  FTGH: string;
+  FTHG: string;
   FTAG: string;
 }
