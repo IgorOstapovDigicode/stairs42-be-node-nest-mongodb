@@ -30,4 +30,8 @@ export class MatchesService {
   async deleteMatch(id) {
     return this.matchModel.findByIdAndDelete(id)
   }
+
+  insertCollection(matchesCollection: MatchDTO[]) {
+    return this.matchModel.insertMany(matchesCollection)
+  }
 }
