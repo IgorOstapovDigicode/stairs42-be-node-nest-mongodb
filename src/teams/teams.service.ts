@@ -31,7 +31,7 @@ export class TeamsService {
     return this.teamModel.findByIdAndDelete(id)
   }
 
-  insertCollection(data) {
+  insertTeamsCollection(data) {
     return this.teamModel.insertMany(data)
   }
 }
