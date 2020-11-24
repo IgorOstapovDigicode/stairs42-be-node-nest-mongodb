@@ -16,7 +16,11 @@ export class MatchesService {
   }
 
   async getAllMatches(): Promise<MatchDTO[]> {
-    return await this.matchModel.find().exec()
+    return await this.matchModel
+      .find()
+      .populate({path: 'HomeTeam'})
+      .populate({path: 'AwayTeam'})
+      .exec()
   }
 
   async getOneMatch(id): Promise<MatchDTO> {

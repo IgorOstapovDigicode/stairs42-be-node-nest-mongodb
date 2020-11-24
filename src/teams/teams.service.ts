@@ -31,7 +31,7 @@ export class TeamsService {
     return this.teamModel.findByIdAndDelete(id)
   }
 
-  insertTeamsCollection(data) {
-    return this.teamModel.insertMany(data)
+  async insertTeamsCollection(data: TeamDTO[]) {
+    return await this.teamModel.insertMany(data)
   }
 }

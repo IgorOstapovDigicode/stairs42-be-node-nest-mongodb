@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { throwError } from 'rxjs';
 import { TeamsService } from './teams/teams.service';
+import { MatchesService } from './matches/matches.service';
 
 @Controller()
 export class AppController {
@@ -9,7 +9,8 @@ export class AppController {
 
   constructor(
     private readonly appService: AppService,
-    private readonly teamsService: TeamsService
+    private readonly teamsService: TeamsService,
+    private readonly matchesService: MatchesService
   ) {}
 
   @Get()
@@ -19,24 +20,31 @@ export class AppController {
 
   @Get('/data')
   async getData() {
-    return await this.appService.getDataset()
-      .then(
-        data => {
-          data.forEach(match => {
-            let team = this.teamsCollection.find(team => team.title === match.HomeTeam)
-            if (!team) {
-              this.teamsCollection.push({title: match.HomeTeam})
-            }
-            team = this.teamsCollection.find(team => team.title === match.AwayTeam)
-            if (!team) {
-              this.teamsCollection.push({title: match.AwayTeam})
-            }
-          })
-          return this.teamsService.insertTeamsCollection(this.teamsCollection)
+    const data = await this.appService.getDataset()
+    data.forEach(match => {
+      let team = this.teamsCollection.find(team => team.title === match.HomeTeam)
+      if (!team) {
+        this.teamsCollection.push({title: match.HomeTeam})
+      }
+      team = this.teamsCollection.find(team => team.title === match.AwayTeam)
+      if (!team) {
+        this.teamsCollection.push({title: match.AwayTeam})
+      }
+    })
+    const teamsCollection = await this.teamsService.insertTeamsCollection(this.teamsCollection)
+    const matchesCollection = data.map(
+      match => {
+        const awayTeam = teamsCollection.find(team => team.title === match.AwayTeam)
+        const homeTeam = teamsCollection.find(team => team.title === match.HomeTeam)
+        return {
+          HomeTeam: homeTeam.id,
+          AwayTeam: awayTeam.id,
+          Date: match.Date,
+          FTHG: match.FTHG,
+          FTAG: match.FTAG
         }
-      )
-      .catch(
-        error => throwError(error)
-      )
+      }
+    )
+    await this.matchesService.insertCollection(matchesCollection)
   }
 }
