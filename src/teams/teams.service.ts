@@ -15,8 +15,10 @@ export class TeamsService {
     return newTeam.save()
   }
 
-  async getAllTeams(): Promise<ITeam[]> {
-    return await this.teamModel.find().exec()
+  async getAllTeams(searchString = '.'): Promise<ITeam[]> {
+    return await this.teamModel
+      .find({title: {$regex: `${searchString}`, $options: 'i'}})
+      .exec()
   }
 
   async getOneTeam(id): Promise<ITeam> {

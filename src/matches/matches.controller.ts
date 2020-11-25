@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { MatchesService } from './matches.service';
 import { MatchDTO } from './dto/match.dto';
 
@@ -14,8 +14,14 @@ export class MatchesController {
   }
 
   @Get()
-  async getAllMatches() {
-    return await this.matchesService.getAllMatches()
+  async getAllMatches(
+    @Query('teamOne') teamOne,
+    @Query('teamTwo') teamTwo,
+    @Query('dateFrom') dateFrom,
+    @Query('dateTo') dateTo
+  ) {
+    const params = {teamOne, teamTwo, dateFrom, dateTo}
+    return await this.matchesService.getAllMatches(params)
   }
 
   @Get('/:id')

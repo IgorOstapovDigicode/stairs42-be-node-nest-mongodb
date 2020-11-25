@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { TeamDTO } from './dto/team.dto';
 
@@ -14,8 +14,10 @@ export class TeamsController {
   }
 
   @Get()
-  async getAllTeams() {
-    return await this.teamsService.getAllTeams()
+  async getAllTeams(
+    @Query('search') searchString
+  ) {
+    return await this.teamsService.getAllTeams(searchString)
   }
 
   @Get('/:id')

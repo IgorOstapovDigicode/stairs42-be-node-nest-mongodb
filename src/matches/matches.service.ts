@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from "mongoose";
+import { FilterQuery, Model } from 'mongoose';
 import { IMatch } from './interfaces/match.interface';
 import { MatchDTO } from './dto/match.dto';
 
@@ -15,9 +15,24 @@ export class MatchesService {
     return newMatch.save()
   }
 
-  async getAllMatches(): Promise<MatchDTO[]> {
+  async getAllMatches({teamOne, teamTwo}): Promise<MatchDTO[]> {
+    let conditions: FilterQuery<MatchDTO> = {}
+    // if someone send the team as teamTwo
+    if (!teamOne && teamTwo) {
+      teamOne = teamTwo
+      teamTwo = null
+    }
+    if (teamOne) conditions = {
+      $or: [{ HomeTeam: teamOne }, { AwayTeam: teamOne }]
+    }
+    if (teamTwo) conditions = {
+      $or: [
+        { HomeTeam: teamOne, AwayTeam: teamTwo },
+        { HomeTeam: teamTwo, AwayTeam: teamOne }
+      ]
+    }
     return await this.matchModel
-      .find()
+      .find(conditions)
       .populate({path: 'HomeTeam'})
       .populate({path: 'AwayTeam'})
       .exec()
