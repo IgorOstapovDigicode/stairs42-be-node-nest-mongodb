@@ -32,7 +32,7 @@ export class MatchesController {
   }
 
   @Put('/:id')
-  async updateTeam(
+  async updateMatch(
     @Param('id') id,
     @Body() matchDTO: MatchDTO
   ) {
@@ -40,7 +40,7 @@ export class MatchesController {
   }
 
   @Delete('/:id')
-  async deleteTeam(
+  async deleteMatch(
     @Param('id') id
   ) {
     await this.matchesService.deleteMatch(id)
