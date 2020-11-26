@@ -39,7 +39,7 @@ export class AppController {
         return {
           HomeTeam: homeTeam.id,
           AwayTeam: awayTeam.id,
-          Date: match.Date,
+          Date: match.Date.split('/').reverse().join('-'), // change to ISO string
           FTHG: match.FTHG,
           FTAG: match.FTAG
         }

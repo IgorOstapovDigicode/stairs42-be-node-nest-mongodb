@@ -10,7 +10,7 @@ export const MatchSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Team'
   },
-  Date: String,
+  Date: Date,
   FTHG: Number,
   FTAG: Number
 }, {versionKey: false})
