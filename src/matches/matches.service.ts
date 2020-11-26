@@ -15,7 +15,7 @@ export class MatchesService {
     return newMatch.save()
   }
 
-  async getAllMatches({teamOne, teamTwo}): Promise<MatchDTO[]> {
+  async getAllMatches({teamOne, teamTwo, dateFrom, dateTo}): Promise<MatchDTO[]> {
     let conditions: FilterQuery<MatchDTO> = {}
     // if someone send the team as teamTwo
     if (!teamOne && teamTwo) {
@@ -30,6 +30,18 @@ export class MatchesService {
         { HomeTeam: teamOne, AwayTeam: teamTwo },
         { HomeTeam: teamTwo, AwayTeam: teamOne }
       ]
+    }
+    if (dateFrom) {
+      conditions.Date = { $gte: dateFrom }
+    }
+    if (dateTo) {
+      conditions.Date = { $lte: dateTo }
+    }
+    if (dateFrom && dateTo) {
+      conditions.Date = {
+        $gte: dateFrom,
+        $lte: dateTo
+      }
     }
     return await this.matchModel
       .find(conditions)
