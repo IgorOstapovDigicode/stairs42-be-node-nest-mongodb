@@ -15,13 +15,9 @@ export class MatchesController {
 
   @Get()
   async getAllMatches(
-    @Query('teamOne') teamOne,
-    @Query('teamTwo') teamTwo,
-    @Query('dateFrom') dateFrom,
-    @Query('dateTo') dateTo
+    @Query() queryParams
   ) {
-    const params = {teamOne, teamTwo, dateFrom, dateTo}
-    return await this.matchesService.getAllMatches(params)
+    return await this.matchesService.getAllMatches(queryParams)
   }
 
   @Get('/:id')

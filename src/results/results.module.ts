@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ResultsController } from './results.controller';
-import { ResultsService } from './results.service';
+import { TeamsModule } from '../teams/teams.module';
+import { MatchesModule } from '../matches/matches.module';
 
 @Module({
-  controllers: [ResultsController],
-  providers: [ResultsService]
+  imports: [TeamsModule, MatchesModule],
+  controllers: [ResultsController]
 })
 export class ResultsModule {}

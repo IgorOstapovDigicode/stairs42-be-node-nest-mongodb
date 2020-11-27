@@ -15,13 +15,9 @@ export class MatchesService {
     return newMatch.save()
   }
 
-  async getAllMatches({teamOne, teamTwo, dateFrom, dateTo}): Promise<MatchDTO[]> {
-    let conditions: FilterQuery<MatchDTO> = {}
-    // if someone send the team as teamTwo
-    if (!teamOne && teamTwo) {
-      teamOne = teamTwo
-      teamTwo = null
-    }
+  async getAllMatches(queryParams?): Promise<IMatch[]> {
+    const {teamOne, teamTwo, dateFrom, dateTo} = queryParams
+    let conditions: FilterQuery<IMatch> = {}
     if (teamOne) conditions = {
       $or: [{ HomeTeam: teamOne }, { AwayTeam: teamOne }]
     }
@@ -45,16 +41,16 @@ export class MatchesService {
     }
     return await this.matchModel
       .find(conditions)
-      .populate({path: 'HomeTeam'})
-      .populate({path: 'AwayTeam'})
+      .populate('HomeTeam')
+      .populate('AwayTeam')
       .exec()
   }
 
-  async getOneMatch(id): Promise<MatchDTO> {
+  async getOneMatch(id): Promise<IMatch> {
     return this.matchModel.findById(id)
   }
 
-  async updateMatch(id, matchDTO: MatchDTO) {
+  async updateMatch(id, matchDTO) {
     return this.matchModel.findByIdAndUpdate(id, matchDTO)
   }
 
