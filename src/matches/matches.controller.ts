@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
 import { MatchesService } from './matches.service';
 import { MatchDTO } from './dto/match.dto';
 
@@ -10,21 +10,36 @@ export class MatchesController {
   async createTeam(
     @Body() matchDTO: MatchDTO
   ) {
-    await this.matchesService.createMatch(matchDTO)
+    try {
+      await this.matchesService.createMatch(matchDTO)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
   @Get()
   async getAllMatches(
     @Query() queryParams
   ) {
-    return await this.matchesService.getAllMatches(queryParams)
+    try {
+      return await this.matchesService.getAllMatches(queryParams)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND)
+    }
   }
 
   @Get('/:id')
   async getMatchById(
     @Param('id') id
   ) {
-    return await this.matchesService.getOneMatch(id)
+    try {
+      return await this.matchesService.getOneMatch(id)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND)
+    }
   }
 
   @Put('/:id')
@@ -32,13 +47,23 @@ export class MatchesController {
     @Param('id') id,
     @Body() matchDTO: MatchDTO
   ) {
-    await this.matchesService.updateMatch(id, matchDTO)
+    try {
+      await this.matchesService.updateMatch(id, matchDTO)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
   @Delete('/:id')
   async deleteMatch(
     @Param('id') id
   ) {
-    await this.matchesService.deleteMatch(id)
+    try {
+      await this.matchesService.deleteMatch(id)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
   }
 }
