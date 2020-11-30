@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query, Res } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { TeamDTO } from './dto/team.dto';
 
@@ -15,16 +15,26 @@ export class TeamsController {
 
   @Get()
   async getAllTeams(
-    @Query('search') searchString
+    @Query('search') searchString,
   ) {
-    return await this.teamsService.getAllTeams(searchString)
+    try {
+      return await this.teamsService.getAllTeams(searchString)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
   @Get('/:id')
   async getTeamById(
     @Param('id') id
   ) {
-    return await this.teamsService.getOneTeam(id)
+    try {
+      return await this.teamsService.getOneTeam(id)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND)
+    }
   }
 
   @Put('/:id')
@@ -32,13 +42,23 @@ export class TeamsController {
     @Param('id') id,
     @Body() teamDTO: TeamDTO
   ) {
-    await this.teamsService.updateTeam(id, teamDTO)
+    try {
+      await this.teamsService.updateTeam(id, teamDTO)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
   }
 
   @Delete('/:id')
   async deleteTeam(
     @Param('id') id
   ) {
-    await this.teamsService.deleteTeam(id)
+    try {
+      await this.teamsService.deleteTeam(id)
+    }
+    catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
   }
 }
