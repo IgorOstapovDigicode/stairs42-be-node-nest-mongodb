@@ -52,20 +52,20 @@ export class AppController {
   }
 
   private async createMatchesCollection() {
-    try {
-      const matchesCollection = this.data.map(
-        match => {
-          const awayTeam = this.teamsCollection.find(team => team.title === match.AwayTeam)
-          const homeTeam = this.teamsCollection.find(team => team.title === match.HomeTeam)
-          return {
-            HomeTeam: homeTeam.id,
-            AwayTeam: awayTeam.id,
-            Date: match.Date.split('/').reverse().join('-'), // change to ISO string
-            FTHG: match.FTHG,
-            FTAG: match.FTAG
-          }
+    const matchesCollection = this.data.map(
+      match => {
+        const awayTeam = this.teamsCollection.find(team => team.title === match.AwayTeam)
+        const homeTeam = this.teamsCollection.find(team => team.title === match.HomeTeam)
+        return {
+          HomeTeam: homeTeam.id,
+          AwayTeam: awayTeam.id,
+          Date: match.Date.split('/').reverse().join('-'), // change to ISO string
+          FTHG: match.FTHG,
+          FTAG: match.FTAG
         }
-      )
+      }
+    )
+    try {
       this.matchesCollection = await this.matchesService.insertCollection(matchesCollection)
     }
     catch (error) {
