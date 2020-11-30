@@ -34,6 +34,6 @@ export class TeamsService {
   }
 
   async insertTeamsCollection(data: TeamDTO[]) {
-    return await this.teamModel.insertMany(data)
+    return this.teamModel.updateMany({}, {$: data}, { upsert: true })
   }
 }

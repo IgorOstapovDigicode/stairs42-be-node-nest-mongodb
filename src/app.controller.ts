@@ -6,8 +6,6 @@ import { MatchesService } from './matches/matches.service';
 @Controller()
 export class AppController {
   data = []
-  teamsCollection = []
-  matchesCollection = []
 
   constructor(
     private readonly appService: AppService,
@@ -44,7 +42,7 @@ export class AppController {
       }
     })
     try {
-      this.teamsCollection = await this.teamsService.insertTeamsCollection(teamsCollection)
+      await this.teamsService.insertTeamsCollection(teamsCollection)
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
@@ -52,21 +50,22 @@ export class AppController {
   }
 
   private async createMatchesCollection() {
-    const matchesCollection = this.data.map(
-      match => {
-        const awayTeam = this.teamsCollection.find(team => team.title === match.AwayTeam)
-        const homeTeam = this.teamsCollection.find(team => team.title === match.HomeTeam)
-        return {
-          HomeTeam: homeTeam.id,
-          AwayTeam: awayTeam.id,
-          Date: match.Date.split('/').reverse().join('-'), // change to ISO string
-          FTHG: match.FTHG,
-          FTAG: match.FTAG
-        }
-      }
-    )
     try {
-      this.matchesCollection = await this.matchesService.insertCollection(matchesCollection)
+      const teamsCollection = await this.teamsService.getAllTeams()
+      const matchesCollection = this.data.map(
+        match => {
+          const awayTeam = teamsCollection.find(team => team.title === match.AwayTeam)
+          const homeTeam = teamsCollection.find(team => team.title === match.HomeTeam)
+          return {
+            HomeTeam: homeTeam.id,
+            AwayTeam: awayTeam.id,
+            Date: match.Date.split('/').reverse().join('-'), // change to ISO string
+            FTHG: match.FTHG,
+            FTAG: match.FTAG
+          }
+        }
+    )
+      await this.matchesService.insertCollection(matchesCollection)
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
