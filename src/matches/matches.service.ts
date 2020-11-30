@@ -47,7 +47,10 @@ export class MatchesService {
   }
 
   async getOneMatch(id): Promise<IMatch> {
-    return this.matchModel.findById(id)
+    return this.matchModel
+      .findById(id)
+      .populate('HomeTeam')
+      .populate('AwayTeam')
   }
 
   async updateMatch(id, matchDTO) {
