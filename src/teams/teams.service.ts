@@ -26,7 +26,7 @@ export class TeamsService {
   }
 
   async updateTeam(id, teamDTO: TeamDTO) {
-    // return this.teamModel.findByIdAndUpdate(id, teamDTO)
+    return this.teamModel.findByIdAndUpdate(id, teamDTO)
   }
 
   async deleteTeam(id) {
