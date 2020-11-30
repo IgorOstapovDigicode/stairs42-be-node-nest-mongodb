@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { AppService } from './app.service';
 import { TeamsService } from './teams/teams.service';
 import { MatchesService } from './matches/matches.service';
@@ -16,27 +16,22 @@ export class AppController {
   ) {}
 
   @Get('/data')
-  async getData(@Res() res) {
-    await this.getDataset(res)
-    await this.createTeamsCollection(res)
-    await this.createMatchesCollection(res)
-    return res.status(HttpStatus.OK)
+  async getData() {
+    await this.getDataset()
+    await this.createTeamsCollection()
+    await this.createMatchesCollection()
   }
 
-  private async getDataset(res) {
+  private async getDataset() {
     try {
       this.data = await this.appService.getDataset()
     }
     catch (error) {
-      return res.status(HttpStatus.NOT_FOUND)
-        .json({
-          status: HttpStatus.NOT_FOUND,
-          message: error.message
-        })
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND)
     }
   }
 
-  private async createTeamsCollection(res) {
+  private async createTeamsCollection() {
     const teamsCollection = []
     this.data.forEach(match => {
       let team = teamsCollection.find(team => team.title === match.HomeTeam)
@@ -52,15 +47,11 @@ export class AppController {
       this.teamsCollection = await this.teamsService.insertTeamsCollection(teamsCollection)
     }
     catch (error) {
-      return res.status(HttpStatus.BAD_REQUEST)
-        .json({
-          status: HttpStatus.BAD_REQUEST,
-          message: error.message
-        })
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  private async createMatchesCollection(res) {
+  private async createMatchesCollection() {
     try {
       const matchesCollection = this.data.map(
         match => {
@@ -78,11 +69,7 @@ export class AppController {
       this.matchesCollection = await this.matchesService.insertCollection(matchesCollection)
     }
     catch (error) {
-      return res.status(HttpStatus.BAD_REQUEST)
-        .json({
-          status: HttpStatus.BAD_REQUEST,
-          message: error.message
-        })
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 }
