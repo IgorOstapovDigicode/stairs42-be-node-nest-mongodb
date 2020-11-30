@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param, Query } from '@nestjs/common';
 import { MatchesService } from '../matches/matches.service';
 import { TeamsService } from '../teams/teams.service';
 import { ITeam } from '../teams/interfaces/team.interface';
@@ -14,26 +14,36 @@ export class ResultsController {
   async getResultsForAll(
     @Query('sort') sort
   ) {
-    const results = []
-    const teams = await this.teamsService.getAllTeams()
-    for (const team of teams) {
-      const result = await this.getTeamResult(team)
-      results.push(result)
+    try {
+      const results = []
+      const teams = await this.teamsService.getAllTeams()
+      for (const team of teams) {
+        const result = await this.getTeamResult(team)
+        results.push(result)
+      }
+      if (sort && sort === 'rating') {
+        results.sort((currTeam, nextTeam) => {
+          return nextTeam.points - currTeam.points
+        })
+      }
+      return results
     }
-    if (sort && sort === 'rating') {
-      results.sort((currTeam, nextTeam) => {
-        return nextTeam.points - currTeam.points
-      })
+    catch(error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND)
     }
-    return results
   }
 
   @Get(':id')
   async getResultsForOne(
     @Param('id') teamId,
   ) {
-    const team = await this.teamsService.getOneTeam(teamId)
-    return await this.getTeamResult(team)
+    try {
+      const team = await this.teamsService.getOneTeam(teamId)
+      return await this.getTeamResult(team)
+    }
+    catch(error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND)
+    }
   }
 
   private async getTeamResult(team: ITeam) {
