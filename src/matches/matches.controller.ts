@@ -7,11 +7,11 @@ export class MatchesController {
   constructor( private matchesService: MatchesService ) {}
 
   @Post('/create')
-  async createTeam(
+  createTeam(
     @Body() matchDTO: MatchDTO
   ) {
     try {
-      await this.matchesService.createMatch(matchDTO)
+      this.matchesService.createMatch(matchDTO)
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
@@ -19,11 +19,11 @@ export class MatchesController {
   }
 
   @Get()
-  async getAllMatches(
+  getAllMatches(
     @Query() queryParams
   ) {
     try {
-      return await this.matchesService.getAllMatches(queryParams)
+      return this.matchesService.getAllMatches(queryParams)
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND)
@@ -31,11 +31,11 @@ export class MatchesController {
   }
 
   @Get('/:id')
-  async getMatchById(
+  getMatchById(
     @Param('id') id
   ) {
     try {
-      return await this.matchesService.getOneMatch(id)
+      return this.matchesService.getOneMatch(id)
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND)
@@ -43,12 +43,12 @@ export class MatchesController {
   }
 
   @Put('/:id')
-  async updateMatch(
+  updateMatch(
     @Param('id') id,
     @Body() matchDTO: MatchDTO
   ) {
     try {
-      await this.matchesService.updateMatch(id, matchDTO)
+      this.matchesService.updateMatch(id, matchDTO)
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
@@ -56,11 +56,11 @@ export class MatchesController {
   }
 
   @Delete('/:id')
-  async deleteMatch(
+  deleteMatch(
     @Param('id') id
   ) {
     try {
-      await this.matchesService.deleteMatch(id)
+      this.matchesService.deleteMatch(id)
     }
     catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
