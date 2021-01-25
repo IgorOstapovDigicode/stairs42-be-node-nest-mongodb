@@ -1,13 +1,9 @@
 import { Controller, Get, HttpException, HttpStatus, Param, Query } from '@nestjs/common';
-import { MatchesService } from '../matches/matches.service';
-import { TeamsService } from '../teams/teams.service';
 import { ResultsService } from './results.service';
 
 @Controller('results')
 export class ResultsController {
   constructor(
-    private teamsService: TeamsService,
-    private matchesService: MatchesService,
     private resultsService: ResultsService
   ) {}
 

@@ -62,6 +62,6 @@ export class MatchesService {
   }
 
   insertCollection(matchesCollection: MatchDTO[]) {
-    return this.matchModel.updateMany({}, { $:matchesCollection }, { upsert: true }).exec()
+    return this.matchModel.updateMany({}, matchesCollection, { upsert: true }).exec()
   }
 }

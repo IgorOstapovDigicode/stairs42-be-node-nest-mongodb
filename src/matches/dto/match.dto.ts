@@ -1,17 +1,21 @@
-export class MatchDTO {
-  readonly id?: string;
-  HomeTeam: string;
-  AwayTeam: string;
-  Date: string;
-  FTHG: number;
-  FTAG: number;
-}
+import { IsString, IsInt } from 'class-validator';
 
-export class MatchGetDTO {
-  readonly id: string;
-  HomeTeam: {id: string, title: string};
-  AwayTeam: {id: string, title: string};
+export class MatchDTO {
+  @IsString()
+  readonly id?: string;
+
+  @IsString()
+  HomeTeam: string;
+
+  @IsString()
+  AwayTeam: string;
+
+  @IsString()
   Date: string;
+
+  @IsInt()
   FTHG: number;
+
+  @IsInt()
   FTAG: number;
 }
