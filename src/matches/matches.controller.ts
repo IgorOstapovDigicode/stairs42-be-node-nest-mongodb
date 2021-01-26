@@ -10,12 +10,7 @@ export class MatchesController {
   createTeam(
     @Body() matchDTO: MatchDTO
   ) {
-    try {
-      this.matchesService.createMatch(matchDTO)
-    }
-    catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
-    }
+    this.matchesService.createMatch(matchDTO)
   }
 
   @Get()
