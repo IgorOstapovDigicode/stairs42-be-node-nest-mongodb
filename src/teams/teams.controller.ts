@@ -17,24 +17,14 @@ export class TeamsController {
   async getAllTeams(
     @Query('search') searchString,
   ) {
-    try {
-      return await this.teamsService.getAllTeams(searchString)
-    }
-    catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
-    }
+    return await this.teamsService.getAllTeams(searchString)
   }
 
   @Get('/:id')
   async getTeamById(
     @Param('id') id
   ) {
-    try {
-      return await this.teamsService.getOneTeam(id)
-    }
-    catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND)
-    }
+    return await this.teamsService.getOneTeam(id)
   }
 
   @Put('/:id')
@@ -42,23 +32,13 @@ export class TeamsController {
     @Param('id') id,
     @Body() teamDTO: TeamDTO
   ) {
-    try {
-      await this.teamsService.updateTeam(id, teamDTO)
-    }
-    catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
-    }
+    await this.teamsService.updateTeam(id, teamDTO)
   }
 
   @Delete('/:id')
   async deleteTeam(
     @Param('id') id
   ) {
-    try {
-      await this.teamsService.deleteTeam(id)
-    }
-    catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
-    }
+    await this.teamsService.deleteTeam(id)
   }
 }
