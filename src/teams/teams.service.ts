@@ -11,13 +11,8 @@ export class TeamsService {
   ) {}
 
   async createTeam(team: TeamDTO) {
-    try {
-      const newTeam = await new this.teamModel(team)
-      newTeam.save()
-    }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
-    }
+    const newTeam = await new this.teamModel(team)
+    newTeam.save()
   }
 
   async getAllTeams(searchString = '.'): Promise<ITeam[]> {

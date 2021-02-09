@@ -1,5 +1,6 @@
-import { Controller, Get, HttpException, HttpStatus, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ResultsService } from './results.service';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('results')
 export class ResultsController {
@@ -8,6 +9,7 @@ export class ResultsController {
   ) {}
 
   @Get()
+  @ApiQuery({ name: 'sort', type: String, required: false })
   async getResultsForAll(
     @Query('sort') sort
   ) {

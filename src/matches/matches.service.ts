@@ -10,49 +10,37 @@ export class MatchesService {
     @InjectModel('Match') private readonly matchModel: Model<IMatch>
   ) {}
 
-  async createMatch(match: MatchDTO) {
-    try {
-      const newMatch = await new this.matchModel(match)
-      return newMatch.save()
-    }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
-    }
+  createMatch(match: MatchDTO) {
+    return new this.matchModel(match);
   }
 
   async getAllMatches(queryParams?): Promise<IMatch[]> {
-    try {
-      const {teamOne, teamTwo, dateFrom, dateTo} = queryParams
-      let conditions: FilterQuery<IMatch> = {}
-      if (teamOne) conditions = {
-        $or: [{ HomeTeam: teamOne }, { AwayTeam: teamOne }]
-      }
-      if (teamTwo) conditions = {
-        $or: [
-          { HomeTeam: teamOne, AwayTeam: teamTwo },
-          { HomeTeam: teamTwo, AwayTeam: teamOne }
-        ]
-      }
-      if (dateFrom) {
-        conditions.Date = { $gte: dateFrom }
-      }
-      if (dateTo) {
-        conditions.Date = { $lte: dateTo }
-      }
-      if (dateFrom && dateTo) {
-        conditions.Date = {
-          $gte: dateFrom,
-          $lte: dateTo
-        }
-      }
-      return this.matchModel
-        .find(conditions)
-        .populate('HomeTeam')
-        .populate('AwayTeam')
+    const {teamOne, teamTwo, dateFrom, dateTo} = queryParams
+    let conditions: FilterQuery<IMatch> = {}
+    if (teamOne) conditions = {
+      $or: [{ HomeTeam: teamOne }, { AwayTeam: teamOne }]
     }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
+    if (teamTwo) conditions = {
+      $or: [
+        { HomeTeam: teamOne, AwayTeam: teamTwo },
+        { HomeTeam: teamTwo, AwayTeam: teamOne }]
     }
+    if (dateFrom) {
+      conditions.Date = { $gte: dateFrom }
+    }
+    if (dateTo) {
+      conditions.Date = { $lte: dateTo }
+    }
+    if (dateFrom && dateTo) {
+      conditions.Date = {
+        $gte: dateFrom,
+        $lte: dateTo
+      }
+    }
+    return this.matchModel
+      .find(conditions)
+      .populate('HomeTeam')
+      .populate('AwayTeam')
   }
 
   async getOneMatch(id): Promise<IMatch> {

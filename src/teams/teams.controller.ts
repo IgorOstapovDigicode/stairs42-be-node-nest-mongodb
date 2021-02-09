@@ -1,19 +1,21 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { TeamDTO } from './dto/team.dto';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('teams')
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}
 
   @Post('/create')
-  async createTeam(
+  createTeam(
     @Body() teamDTO: TeamDTO
   ) {
-    await this.teamsService.createTeam(teamDTO)
+    return this.teamsService.createTeam(teamDTO);
   }
 
   @Get()
+  @ApiQuery({ name: 'search', type: String, required: false })
   async getAllTeams(
     @Query('search') searchString,
   ) {
