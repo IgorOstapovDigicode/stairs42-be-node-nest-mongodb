@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { TeamsService } from '../teams/teams.service';
 import { MatchesService } from '../matches/matches.service';
+import { IResult } from './results.interface';
 
 @Injectable()
 export class ResultsService {
@@ -9,10 +10,10 @@ export class ResultsService {
     private matchesService: MatchesService
   ) { }
 
-  async getTeamResult(teamId: string) {
+  async getTeamResult(teamId: string): Promise<IResult> {
     try {
-      const team = await this.teamsService.getOneTeam(teamId)
-      const matches = await this.matchesService.getAllMatches({teamOne: team.id})
+      const team = await this.teamsService.getOneTeam(teamId);
+      const matches = await this.matchesService.getAllMatches({teamOne: team.id});
       const result = {
         team,
         won: 0,
@@ -61,7 +62,7 @@ export class ResultsService {
     }
   }
 
-  async getTeamsResults() {
+  async getTeamsResults(): Promise<IResult[]> {
     try {
       const results = [];
       const teams = await this.teamsService.getAllTeams();

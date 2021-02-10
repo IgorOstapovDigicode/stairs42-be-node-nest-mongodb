@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ResultsService } from './results.service';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { IResult } from './results.interface';
+import { ResultDTO } from './result.dto';
 
 @Controller('results')
 export class ResultsController {
@@ -10,9 +12,10 @@ export class ResultsController {
 
   @Get()
   @ApiQuery({ name: 'sort', type: String, required: false })
-  async getResultsForAll(
+  @ApiOkResponse({ type: [ResultDTO] })
+  async getResultsForAll (
     @Query('sort') sort
-  ) {
+  ): Promise<IResult[]> {
     const results = await this.resultsService.getTeamsResults()
     if (sort && sort === 'rating') {
       results.sort((currTeam, nextTeam) => {
@@ -23,9 +26,10 @@ export class ResultsController {
   }
 
   @Get(':id')
-  async getResultsForOne(
+  @ApiOkResponse({ type: ResultDTO })
+  getResultsForOne(
     @Param('id') teamId,
-  ) {
-    return this.resultsService.getTeamResult(teamId)
+  ): Promise<IResult> {
+    return this.resultsService.getTeamResult(teamId);
   }
 }
