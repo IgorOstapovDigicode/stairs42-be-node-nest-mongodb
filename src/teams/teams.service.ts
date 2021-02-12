@@ -11,8 +11,7 @@ export class TeamsService {
   ) {}
 
   async createTeam(team: TeamDTO) {
-    const newTeam = await new this.teamModel(team)
-    newTeam.save()
+    return new this.teamModel(team);
   }
 
   async getAllTeams(searchString = '.'): Promise<ITeam[]> {

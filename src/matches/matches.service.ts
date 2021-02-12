@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { IMatch } from './interfaces/match.interface';
 import { MatchDTO } from './dto/match.dto';
+import { PathToPopulate } from './constants';
 
 @Injectable()
 export class MatchesService {
@@ -39,16 +40,16 @@ export class MatchesService {
     }
     return this.matchModel
       .find(conditions)
-      .populate('HomeTeam')
-      .populate('AwayTeam')
+      .populate(PathToPopulate.HOME_TEAM)
+      .populate(PathToPopulate.AWAY_TEAM)
   }
 
   async getOneMatch(id): Promise<IMatch> {
     try {
       return this.matchModel
         .findById(id)
-        .populate('HomeTeam')
-        .populate('AwayTeam')
+        .populate(PathToPopulate.HOME_TEAM)
+        .populate(PathToPopulate.AWAY_TEAM)
     }
     catch (error) {
       throw new HttpException(error.message, error.status)

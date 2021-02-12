@@ -1,28 +1,32 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { TeamDTO } from './dto/team.dto';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 
 @Controller('teams')
 export class TeamsController {
   constructor(private teamsService: TeamsService) {}
 
   @Post('/create')
+  @ApiBody({ type: TeamDTO })
+  @ApiCreatedResponse({ type: TeamDTO })
   createTeam(
     @Body() teamDTO: TeamDTO
-  ) {
+  ): Promise<TeamDTO> {
     return this.teamsService.createTeam(teamDTO);
   }
 
   @Get()
   @ApiQuery({ name: 'search', type: String, required: false })
+  @ApiOkResponse({ type: [TeamDTO] })
   async getAllTeams(
     @Query('search') searchString,
-  ) {
+  ): Promise<TeamDTO[]> {
     return await this.teamsService.getAllTeams(searchString)
   }
 
   @Get('/:id')
+  @ApiOkResponse({ type: TeamDTO })
   async getTeamById(
     @Param('id') id
   ) {
