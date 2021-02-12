@@ -10,7 +10,7 @@ export class TeamsService {
     @InjectModel('Team') private readonly teamModel: Model<ITeam>
   ) {}
 
-  async createTeam(team: TeamDTO) {
+  createTeam(team: TeamDTO) {
     return new this.teamModel(team);
   }
 

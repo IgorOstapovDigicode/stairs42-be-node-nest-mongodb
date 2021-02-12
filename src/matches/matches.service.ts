@@ -56,7 +56,7 @@ export class MatchesService {
     }
   }
 
-  async updateMatch(id, matchDTO) {
+  updateMatch(id, matchDTO) {
     try {
       this.matchModel.findByIdAndUpdate(id, matchDTO)
     }
@@ -65,7 +65,7 @@ export class MatchesService {
     }
   }
 
-  async deleteMatch(id) {
+  deleteMatch(id) {
     try {
       this.matchModel.findByIdAndDelete(id)
     }

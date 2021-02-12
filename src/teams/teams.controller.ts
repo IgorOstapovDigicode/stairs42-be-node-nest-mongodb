@@ -19,26 +19,26 @@ export class TeamsController {
   @Get()
   @ApiQuery({ name: 'search', type: String, required: false })
   @ApiOkResponse({ type: [TeamDTO] })
-  async getAllTeams(
+  getAllTeams(
     @Query('search') searchString,
   ): Promise<TeamDTO[]> {
-    return await this.teamsService.getAllTeams(searchString)
+    return this.teamsService.getAllTeams(searchString)
   }
 
   @Get('/:id')
   @ApiOkResponse({ type: TeamDTO })
-  async getTeamById(
+  getTeamById(
     @Param('id') id
   ) {
-    return await this.teamsService.getOneTeam(id)
+    return this.teamsService.getOneTeam(id)
   }
 
   @Put('/:id')
-  async updateTeam(
+  updateTeam(
     @Param('id') id,
     @Body() teamDTO: TeamDTO
   ) {
-    await this.teamsService.updateTeam(id, teamDTO)
+    this.teamsService.updateTeam(id, teamDTO)
   }
 
   @Delete('/:id')

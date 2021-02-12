@@ -68,11 +68,6 @@ export class MatchesController {
   deleteMatch(
     @Param('id') id
   ) {
-    try {
-      this.matchesService.deleteMatch(id)
-    }
-    catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
-    }
+    this.matchesService.deleteMatch(id)
   }
 }
