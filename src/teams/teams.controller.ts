@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { TeamsService } from './teams.service';
 import { TeamDTO } from './dto/team.dto';
-import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { ITeam } from './interfaces/team.interface';
 
 @Controller('teams')
 export class TeamsController {
@@ -10,15 +11,17 @@ export class TeamsController {
   @Post('/create')
   @ApiBody({ type: TeamDTO })
   @ApiCreatedResponse({ type: TeamDTO })
+  @ApiNotFoundResponse()
   createTeam(
     @Body() teamDTO: TeamDTO
-  ): Promise<TeamDTO> {
+  ): ITeam {
     return this.teamsService.createTeam(teamDTO);
   }
 
   @Get()
   @ApiQuery({ name: 'search', type: String, required: false })
   @ApiOkResponse({ type: [TeamDTO] })
+  @ApiNotFoundResponse()
   getAllTeams(
     @Query('search') searchString,
   ): Promise<TeamDTO[]> {
@@ -27,6 +30,7 @@ export class TeamsController {
 
   @Get('/:id')
   @ApiOkResponse({ type: TeamDTO })
+  @ApiNotFoundResponse()
   getTeamById(
     @Param('id') id
   ) {
@@ -34,17 +38,21 @@ export class TeamsController {
   }
 
   @Put('/:id')
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
   updateTeam(
     @Param('id') id,
     @Body() teamDTO: TeamDTO
   ) {
-    this.teamsService.updateTeam(id, teamDTO)
+    return this.teamsService.updateTeam(id, teamDTO)
   }
 
   @Delete('/:id')
-  async deleteTeam(
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  deleteTeam(
     @Param('id') id
   ) {
-    await this.teamsService.deleteTeam(id)
+    return this.teamsService.deleteTeam(id)
   }
 }

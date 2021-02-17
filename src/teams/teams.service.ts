@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from "mongoose";
 import { InjectModel } from '@nestjs/mongoose';
 import { ITeam } from './interfaces/team.interface';
@@ -15,41 +15,36 @@ export class TeamsService {
   }
 
   async getAllTeams(searchString = '.'): Promise<ITeam[]> {
-    try {
-      return await this.teamModel
-        .find({title: {$regex: `${searchString}`, $options: 'i'}})
-        .exec()
+    const teams = await this.teamModel
+      .find({title: {$regex: `${searchString}`, $options: 'i'}});
+    if (!teams) {
+      throw new NotFoundException();
     }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
-    }
+    return teams;
   }
 
   async getOneTeam(id): Promise<ITeam> {
-    try {
-      return this.teamModel.findById(id)
+    const team = await this.teamModel.findById(id);
+    if (!team) {
+      throw new NotFoundException();
     }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
-    }
+    return team;
   }
 
   async updateTeam(id, teamDTO: TeamDTO) {
-    try {
-      this.teamModel.findByIdAndUpdate(id, teamDTO)
+    const result = await this.teamModel.findByIdAndUpdate(id, teamDTO);
+    if (!result) {
+      throw new NotFoundException();
     }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
-    }
+    return result;
   }
 
   async deleteTeam(id) {
-    try {
-      this.teamModel.findByIdAndDelete(id)
+    const result = await this.teamModel.findByIdAndDelete(id);
+    if (!result) {
+      throw new NotFoundException();
     }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
-    }
+    return result;
   }
 
   async insertTeamsCollection(data: TeamDTO[]) {
