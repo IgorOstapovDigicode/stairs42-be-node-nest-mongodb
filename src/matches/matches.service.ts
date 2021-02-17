@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { IMatch } from './interfaces/match.interface';
@@ -38,39 +38,38 @@ export class MatchesService {
         $lte: dateTo
       }
     }
-    return this.matchModel
+    const matches = await this.matchModel
       .find(conditions)
       .populate(PathToPopulate.HOME_TEAM)
-      .populate(PathToPopulate.AWAY_TEAM)
+      .populate(PathToPopulate.AWAY_TEAM);
+    if (!matches) {
+      throw new NotFoundException();
+    }
+    return matches;
   }
 
   async getOneMatch(id): Promise<IMatch> {
-    try {
-      return this.matchModel
-        .findById(id)
-        .populate(PathToPopulate.HOME_TEAM)
-        .populate(PathToPopulate.AWAY_TEAM)
+    const match = await this.matchModel
+      .findById(id)
+      .populate(PathToPopulate.HOME_TEAM)
+      .populate(PathToPopulate.AWAY_TEAM);
+    if (!match) {
+      throw new NotFoundException();
     }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
+    return match;
+  }
+
+  async updateMatch(id, matchDTO) {
+    const result = await this.matchModel.findByIdAndUpdate(id, matchDTO);
+    if (!result) {
+      throw new NotFoundException();
     }
   }
 
-  updateMatch(id, matchDTO) {
-    try {
-      this.matchModel.findByIdAndUpdate(id, matchDTO)
-    }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
-    }
-  }
-
-  deleteMatch(id) {
-    try {
-      this.matchModel.findByIdAndDelete(id)
-    }
-    catch (error) {
-      throw new HttpException(error.message, error.status)
+  async deleteMatch(id) {
+    const result = await this.matchModel.findByIdAndDelete(id);
+    if (!result) {
+      throw new NotFoundException();
     }
   }
 

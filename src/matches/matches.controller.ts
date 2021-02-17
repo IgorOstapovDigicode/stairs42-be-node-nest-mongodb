@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
@@ -68,6 +66,6 @@ export class MatchesController {
   deleteMatch(
     @Param('id') id
   ) {
-    this.matchesService.deleteMatch(id)
+    return this.matchesService.deleteMatch(id)
   }
 }
